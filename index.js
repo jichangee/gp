@@ -68,8 +68,13 @@ const canTrading = () => {
   if (hours === 9 && minu < 30) {
     res = false
   }
-  if (hours === 11 && minu > 30 || hours === 12) {
+  // 收盘后再发一次
+  if (hours === 11 && minu > 40 || hours === 12) {
     res = false
+  }
+  // 收盘后再发一次
+  if (hours === 15 && minu <= 10) {
+    res = true
   }
   console.log('res', res)
   return res
