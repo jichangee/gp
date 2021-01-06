@@ -30,13 +30,33 @@ const getList = (codeList) => {
 }
 
 const getInfo = (subBeans) => {
+  const list = []
   subBeans.forEach(item => {
-    console.log(item.name, calcPer(item.newPrice, item.prevClosePx));
+    list.push(`${item.name}：${calcPer(item.newPrice, item.prevClosePx)}`)
   })
+  sendInfo(list)
 }
 
 const calcPer = (newPrice, prevClosePx) => {
   return `${((newPrice - prevClosePx) / prevClosePx * 100).toFixed(2)}%`
 }
 
-getList(gpList)
+const sendInfo = (list) => {
+  const text = list.join('，')
+  console.log('text', text)
+  request.get(`https://sc.ftqq.com/SCU60039T6f839ebc217d945aa1bdfc0d44f6621c5d775f6060b3f.send?text=${encodeURIComponent(text)}`)
+}
+
+const init = () => {
+  const d = new Date().getDay()
+  // 休息日不获取数据
+  if (d === 6 || d === 0) {
+    return;
+  }
+  getList(gpList)
+}
+
+init()
+setInterval(() => {
+  init()
+}, 10 * 60 * 1000);

@@ -1,0 +1,9 @@
+{
+  "apps": [
+      {
+          "name": "gp",
+          "script": "node",
+          "args" : "index.js"
+      }
+  ]
+}
