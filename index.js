@@ -48,14 +48,29 @@ const calcPer = (newPrice, prevClosePx) => {
 }
 
 const sendInfo = (list) => {
-  const text = list.join('，')
-  hasChange = lastInfo !== text
-  lastInfo = text
-  request.get(
-    `https://sc.ftqq.com/SCU60039T6f839ebc217d945aa1bdfc0d44f6621c5d775f6060b3f.send?text=${encodeURIComponent(
-      text
-    )}`
-  )
+  const text = '价格更新'
+  const desp = '- ' + list.join(' \n- ')
+  hasChange = lastInfo !== desp
+  lastInfo = desp
+
+  const form = {
+    text,
+    desp,
+  }
+  request({
+    url: `https://sc.ftqq.com/SCU60039T6f839ebc217d945aa1bdfc0d44f6621c5d775f6060b3f.send`,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    },
+    form: form,
+  }, (err, res) => {
+    if (err) {
+      console.log('err', err);
+      return;
+    }
+    console.log('res', res.body);
+  })
 }
 
 const canTrading = () => {
@@ -69,7 +84,7 @@ const canTrading = () => {
     res = false
   }
   // 收盘后再发一次
-  if (hours === 11 && minu > 40 || hours === 12) {
+  if ((hours === 11 && minu > 40) || hours === 12) {
     res = false
   }
   // 收盘后再发一次
@@ -94,4 +109,4 @@ setInterval(() => {
 
 setInterval(() => {
   hasChange = true
-}, 12 * 60 * 60 * 1000);
+}, 12 * 60 * 60 * 1000)
